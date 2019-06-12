@@ -11,6 +11,10 @@ data_path = os.path.join(os.path.dirname(__file__), 'data', 'fft.fits')
 
 
 class Filter(object):
+    """
+    Astronomical filter object.
+    """
+
     def __init__(self, path=data_path):
         """
         Parameters
@@ -36,12 +40,13 @@ class Filter(object):
         Parameters
         ----------
         identifier : str
-            Name of the filter. To see available filters, run `~tynt.Filter.available_filters()`
+            Name of the filter. To see available filters, run
+            `~tynt.Filter.available_filters()`
         
         Returns
         -------
         wavelength : `~numpy.ndarray`
-            Wavelength array
+            Wavelength array in Angstroms
         transmittance : `~numpy.ndarray`
             Approximate transmittance as a function of wavelength
         """
@@ -66,12 +71,13 @@ class Filter(object):
         Parameters
         ----------
         identifier : str
-            Name of the filter. To see available filters, run `~tynt.Filter.available_filters()`
+            Name of the filter. To see available filters, run
+            `~tynt.Filter.available_filters()`
         
         Returns
         -------
         wavelength : `~numpy.ndarray`
-            True wavelength array
+            True wavelength array in Angstroms
         transmittance : `~numpy.ndarray`
             True transmittance as a function of wavelength        
         """

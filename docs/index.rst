@@ -1,15 +1,12 @@
 Documentation
 =============
 
-This is the documentation for tynt.
-Color filter approximations in Python
+`tynt` is a lightweight package containing approximate transmittance curves for
+more than four thousand astronomical filters.
 
 .. toctree::
   :maxdepth: 2
 
-  tynt/index.rst
-
-.. note:: The layout of this directory is simply a suggestion.  To follow
-          traditional practice, do *not* edit this page, but instead place
-          all documentation for the package inside ``tynt/``.
-          You can follow this practice or choose your own layout.
+  installation
+  gettingstarted
+  api

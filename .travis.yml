@@ -77,12 +77,6 @@ matrix:
         - stage: Initial tests
           env: PYTHON_VERSION=3.7 SETUP_CMD='egg_info'
 
-        # Try MacOS X, usually enough only to run from cron as hardly there are
-        # issues that are not picked up by a linux worker
-        - os: osx
-          stage: Cron
-          env: SETUP_CMD='test'
-
         # Do a coverage test.
         - os: linux
           stage: Initial tests
