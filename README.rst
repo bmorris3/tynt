@@ -5,6 +5,10 @@ tynt: color filter approximations in Python
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
+.. image:: https://readthedocs.org/projects/tynt/badge/?version=latest
+    :target: https://tynt.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 Color filter approximations in Python
 
 
