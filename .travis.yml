@@ -88,6 +88,10 @@ matrix:
           stage: Initial tests
           env: SETUP_CMD='test --coverage'
 
+        - os: linux
+          stage: remote data
+          env: SETUP_CMD='test --remote-data'
+
         # Check for sphinx doc build warnings - we do this first because it
         # may run for a long time
         - os: linux
@@ -100,16 +104,6 @@ matrix:
                EVENT_TYPE='pull_request push cron'
         - os: linux
           env: PYTHON_VERSION=3.6 ASTROPY_VERSION=lts NUMPY_VERSION=1.13
-
-        # Try all python versions and Numpy versions. Since we can assume that
-        # the Numpy developers have taken care of testing Numpy with different
-        # versions of Python, we can vary Python and Numpy versions at the same
-        # time.
-
-        - os: linux
-          env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.14
-        - os: linux
-          env: NUMPY_VERSION=1.15
 
         # Do a PEP8 test with flake8
         - os: linux
