@@ -9,6 +9,9 @@ tynt: color filter approximations in Python
     :target: https://tynt.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://travis-ci.com/bmorris3/tynt.svg?branch=master
+    :target: https://travis-ci.com/bmorris3/tynt
+    
 Color filter approximations in Python
 
 
