@@ -5,6 +5,7 @@ from ..core import Filter
 
 f = Filter()
 
+
 @remote_data
 def test_sdss_r(): 
 
@@ -16,6 +17,7 @@ def test_sdss_r():
     np.testing.assert_allclose(np.interp(true_wl, approx_wl, approx_tr),
                                true_tr, atol=0.5)
 
+
 @remote_data
 def test_sdss_g():
 
@@ -26,6 +28,7 @@ def test_sdss_g():
 
     np.testing.assert_allclose(np.interp(true_wl, approx_wl, approx_tr),
                                true_tr, atol=0.07)
+
 
 @remote_data
 def test_sdss_i():

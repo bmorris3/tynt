@@ -34,7 +34,7 @@ class Filter(object):
     def reconstruct(self, identifier):
         """
         Reconstruct an approximate filter transmittance curve for
-        a given filter. 
+        a given filter.
         
         Parameters
         ----------
@@ -59,14 +59,15 @@ class Filter(object):
 
         ifft = np.fft.ifft(fft, n=len(wavelength))
 
-        transmittance = (ifft.real - ifft.real.min()) * tr_max / ifft.real.ptp()
+        transmittance = ((ifft.real - ifft.real.min()) * tr_max /
+                         ifft.real.ptp())
 
         return wavelength, transmittance
 
     def download_true_transmittance(self, identifier):
         """
         Query the SVO service for a given filter, return the true transmittance
-        curve. 
+        curve.
         
         Parameters
         ----------
