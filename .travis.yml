@@ -83,13 +83,13 @@ matrix:
           env: SETUP_CMD='test --coverage'
 
         - os: linux
-          stage: remote data
+          stage: Remote data
           env: SETUP_CMD='test --remote-data'
 
         # Check for sphinx doc build warnings - we do this first because it
         # may run for a long time
         - os: linux
-          env: SETUP_CMD='build_docs -w'
+          env: SETUP_CMD='build_docs'
                CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES_DOC
 
         # Now try Astropy dev with the latest Python and LTS with and 3.x.

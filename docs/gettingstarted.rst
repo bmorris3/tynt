@@ -68,7 +68,7 @@ advantage of the `~tynt.Filter.available_filters()` method, like so::
 
         flux_weighted_wl = np.average(wl, weights=tr)
 
-        plt.annotate(filt, xy=(flux_weighted_wl, 0.8 * tr.max()), #filt.split('.')[1]
+        plt.annotate(filt, xy=(flux_weighted_wl, 0.8 * tr.max()),
                      rotation=90, ha='center')
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
@@ -91,7 +91,7 @@ advantage of the `~tynt.Filter.available_filters()` method, like so::
 
         flux_weighted_wl = np.average(wl, weights=tr)
 
-        plt.annotate(filt, xy=(flux_weighted_wl, 0.8 * tr.max()), #filt.split('.')[1]
+        plt.annotate(filt, xy=(flux_weighted_wl, 0.8 * tr.max()),
                      rotation=90, ha='center')
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
