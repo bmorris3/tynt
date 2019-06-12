@@ -7,7 +7,7 @@ f = Filter()
 
 
 @remote_data
-def test_sdss_r(): 
+def test_sdss_r():
 
     filt = 'SLOAN/SDSS.rprime_filter'
 

@@ -35,13 +35,13 @@ class Filter(object):
         """
         Reconstruct an approximate filter transmittance curve for
         a given filter.
-        
+
         Parameters
         ----------
         identifier : str
             Name of the filter. To see available filters, run
             `~tynt.Filter.available_filters()`
-        
+
         Returns
         -------
         wavelength : `~numpy.ndarray`
@@ -68,19 +68,19 @@ class Filter(object):
         """
         Query the SVO service for a given filter, return the true transmittance
         curve.
-        
+
         Parameters
         ----------
         identifier : str
             Name of the filter. To see available filters, run
             `~tynt.Filter.available_filters()`
-        
+
         Returns
         -------
         wavelength : `~numpy.ndarray`
             True wavelength array in Angstroms
         transmittance : `~numpy.ndarray`
-            True transmittance as a function of wavelength        
+            True transmittance as a function of wavelength
         """
         path = download_file('http://svo2.cab.inta-csic.es/'
                              'theory/fps3/fps.php?ID={0}'.format(identifier))
