@@ -5,6 +5,7 @@ from astropy.io import fits
 from astropy.table import Table
 from astropy.utils.data import download_file
 from astropy.modeling import models
+import astropy.units as u
 
 
 __all__ = ['Filter']
@@ -65,7 +66,7 @@ class Filter(object):
         transmittance = ((ifft.real - ifft.real.min()) * tr_max /
                          ifft.real.ptp())
 
-        return wavelength, transmittance
+        return wavelength*u.Angstrom, transmittance
 
     def model(self, identifier):
         """
@@ -108,7 +109,7 @@ class Filter(object):
                    (wavelength[1] - wavelength[0]))
             return (mo - mo.min()) * tr_max / mo.ptp()
 
-        return wavelength, fft_model()
+        return wavelength*u.Angstrom, fft_model()
 
     def download_true_transmittance(self, identifier):
         """
@@ -132,5 +133,5 @@ class Filter(object):
                              'theory/fps3/fps.php?ID={0}'.format(identifier))
 
         true_transmittance = Table.read(path, format='votable')
-        return (true_transmittance['Wavelength'].data.data,
+        return (true_transmittance['Wavelength'].data.data*u.Angstrom,
                 true_transmittance['Transmission'].data.data)
