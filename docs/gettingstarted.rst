@@ -10,12 +10,12 @@ Approximating a filter transmittance curve
 First, let's simply plot the approximate transmittance curve SDSS r' filter.
 We begin by importing `tynt` and `matplotlib`::
 
-    from tynt import Filter
+    from tynt import FilterGenerator
     import matplotlib.pyplot as plt
 
-We next initialize a `~tynt.Filter` object, which has the useful methods on it::
+We next initialize a `~tynt.FilterGenerator` object, which has the useful methods on it::
 
-    f = Filter()
+    f = FilterGenerator()
 
 and let's specify the filter that we're observing with::
 
@@ -23,25 +23,25 @@ and let's specify the filter that we're observing with::
 
 Let's get the approximate transmittance curve as a function of wavelength::
 
-    wavelength, transmittance = f.reconstruct(identifier)
+    filt = f.reconstruct(identifier)
 
 And plot it with `matplotlib`::
 
-    plt.plot(wavelength, transmittance, label=identifier)
+    plt.plot(filt.wavelength.value, filt.transmittance, label=identifier)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
     plt.legend()
 
 .. plot::
 
-    from tynt import Filter
+    from tynt import FilterGenerator
     import matplotlib.pyplot as plt
 
-    f = Filter()
+    f = FilterGenerator()
 
     identifier = 'SLOAN/SDSS.rprime_filter'
-    wl, tr = f.reconstruct(identifier)
-    plt.plot(wl, tr, label=identifier)
+    filt = f.reconstruct(identifier)
+    plt.plot(filt.wavelength.value, filt.transmittance, label=identifier)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
     plt.legend()
@@ -50,51 +50,34 @@ Plotting all SDSS curves
 ------------------------
 
 We can grab all of the SDSS prime filters with the following syntax, taking
-advantage of the `~tynt.Filter.available_filters()` method, like so::
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-
-    from tynt import Filter
-
-    f = Filter()
-    filters = [filt for filt in f.available_filters()
-               if 'SLOAN/SDSS' in filt and 'prime' in filt]
-
-    fig, ax = plt.subplots(figsize=(10, 5))
-    for filt in filters:
-        wl, tr = f.reconstruct(filt)
-        plt.plot(wl, tr)
-
-        flux_weighted_wl = np.average(wl, weights=tr)
-
-        plt.annotate(filt, xy=(flux_weighted_wl, 0.8 * tr.max()),
-                     rotation=90, ha='center')
-    plt.xlabel('Wavelength [$\AA$]')
-    plt.ylabel('Transmittance')
+advantage of the `~tynt.FilterGenerator.available_filters()` method, like so:
 
 .. plot::
+    :include-source:
 
     import matplotlib.pyplot as plt
     import numpy as np
 
-    from tynt import Filter
+    from tynt import FilterGenerator
 
-    f = Filter()
+    f = FilterGenerator()
     filters = [filt for filt in f.available_filters()
                if 'SLOAN/SDSS' in filt and 'prime' in filt]
 
     fig, ax = plt.subplots(figsize=(10, 5))
     for filt in filters:
-        wl, tr = f.reconstruct(filt)
-        plt.plot(wl, tr)
+        sdss_filter = f.reconstruct(filt)
+        plt.plot(sdss_filter.wavelength.value, sdss_filter.transmittance)
 
-        flux_weighted_wl = np.average(wl, weights=tr)
+        flux_weighted_wl = np.average(sdss_filter.wavelength.value,
+                                      weights=sdss_filter.transmittance)
 
-        plt.annotate(filt, xy=(flux_weighted_wl, 0.8 * tr.max()),
-                     rotation=90, ha='center')
+        plt.annotate(filt, xy=(flux_weighted_wl,
+                               0.8 * sdss_filter.transmittance.max()),
+                     rotation=90, va='top')
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
+
 
 You can see in the figure above that the Fourier transform approximation does a
 rather poor job at the blue-end of the SDSS z' filter.
@@ -103,52 +86,36 @@ Comparing the approximation to the true transmittance
 -----------------------------------------------------
 
 Finally, let's compare the approximate transmittance curve to the true
-transmittance curve, which we'll download from the SVO service::
-
-    import matplotlib.pyplot as plt
-    import numpy as np
-
-    from tynt import Filter
-
-    f = Filter()
-
-    filt = 'SLOAN/SDSS.rprime_filter'
-
-    approx_wl, approx_tr = f.reconstruct(filt)
-    true_wl, true_tr = f.download_true_transmittance(filt)
-
-    fig, ax = plt.subplots(2, 1, figsize=(4, 8))
-    ax[0].plot(true_wl, true_tr, label='True')
-    ax[0].plot(approx_wl, approx_tr, label='Approx')
-    for axis in ax:
-        axis.set_xlabel("Wavelength [$\AA$]")
-    ax[0].set_ylabel("Transmittance")
-    ax[0].legend()
-    ax[1].plot(true_wl, 100*(np.interp(true_wl, approx_wl, approx_tr) - true_tr))
-    ax[1].set_ylabel('Error (%)')
+transmittance curve, which we'll download from the SVO service:
 
 .. plot::
+    :include-source:
 
     import matplotlib.pyplot as plt
     import numpy as np
 
-    from tynt import Filter
+    from tynt import FilterGenerator
 
-    f = Filter()
+    f = FilterGenerator()
 
     filt = 'SLOAN/SDSS.rprime_filter'
 
-    approx_wl, approx_tr = f.reconstruct(filt)
-    true_wl, true_tr = f.download_true_transmittance(filt)
+    filt_approx = f.reconstruct(filt)
+    filt_true = f.download_true_transmittance(filt)
 
     fig, ax = plt.subplots(2, 1, figsize=(4, 8))
-    ax[0].plot(true_wl, true_tr, label='True')
-    ax[0].plot(approx_wl, approx_tr, label='Approx')
+    ax[0].plot(filt_true.wavelength.value, filt_true.transmittance, label='True')
+    ax[0].plot(filt_approx.wavelength.value, filt_approx.transmittance, label='Approx')
     for axis in ax:
         axis.set_xlabel("Wavelength [$\AA$]")
     ax[0].set_ylabel("Transmittance")
     ax[0].legend()
-    ax[1].plot(true_wl, 100*(np.interp(true_wl, approx_wl, approx_tr) - true_tr))
+
+    difference = 100*(np.interp(filt_true.wavelength,
+                                filt_approx.wavelength,
+                                filt_approx.transmittance) - filt_true.transmittance)
+
+    ax[1].plot(filt_true.wavelength.value, difference)
     ax[1].set_ylabel('Error (%)')
 
     for axis in ax:
@@ -163,32 +130,20 @@ Constructing an astropy model transmittance curve
 
 In some instances it may be useful to represent the transmittance curve
 analytically with an astropy model. You can get a custom astropy model
-like so::
-
-    from tynt import Filter
-    import matplotlib.pyplot as plt
-
-    f = Filter()
-
-    identifier = 'SLOAN/SDSS.rprime_filter'
-    wavelength, model = f.model(identifier)
-
-    plt.plot(wavelength, model(wavelength))
-    plt.xlabel('Wavelength [$\AA$]')
-    plt.ylabel('Transmittance')
-    plt.show()
+like so:
 
 .. plot::
+    :include-source:
 
-    from tynt import Filter
+    from tynt import FilterGenerator
     import matplotlib.pyplot as plt
 
-    f = Filter()
+    f = FilterGenerator()
 
     identifier = 'SLOAN/SDSS.rprime_filter'
-    wavelength, model = f.model(identifier)
+    filt = f.model(identifier)
 
-    plt.plot(wavelength, model(wavelength))
+    plt.plot(filt.wavelength.value, filt.model(filt.wavelength.value))
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
     plt.show()

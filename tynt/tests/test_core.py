@@ -1,18 +1,20 @@
 from astropy.tests.helper import remote_data
 import numpy as np
 
-from ..core import Filter
+from ..core import FilterGenerator
 
-f = Filter()
+f = FilterGenerator()
 
 
 @remote_data
 def test_sdss_r():
 
-    filt = 'SLOAN/SDSS.rprime_filter'
+    identifier = 'SLOAN/SDSS.rprime_filter'
 
-    approx_wl, approx_tr = f.reconstruct(filt)
-    true_wl, true_tr = f.download_true_transmittance(filt)
+    filt = f.reconstruct(identifier)
+    approx_wl, approx_tr = filt.wavelength, filt.transmittance
+    true_filt = f.download_true_transmittance(identifier)
+    true_wl, true_tr = true_filt.wavelength, true_filt.transmittance
 
     np.testing.assert_allclose(np.interp(true_wl, approx_wl, approx_tr),
                                true_tr, atol=0.5)
@@ -21,10 +23,12 @@ def test_sdss_r():
 @remote_data
 def test_sdss_g():
 
-    filt = 'SLOAN/SDSS.gprime_filter'
+    identifier = 'SLOAN/SDSS.gprime_filter'
 
-    approx_wl, approx_tr = f.reconstruct(filt)
-    true_wl, true_tr = f.download_true_transmittance(filt)
+    filt = f.reconstruct(identifier)
+    approx_wl, approx_tr = filt.wavelength, filt.transmittance
+    true_filt = f.download_true_transmittance(identifier)
+    true_wl, true_tr = true_filt.wavelength, true_filt.transmittance
 
     np.testing.assert_allclose(np.interp(true_wl, approx_wl, approx_tr),
                                true_tr, atol=0.07)
@@ -33,10 +37,12 @@ def test_sdss_g():
 @remote_data
 def test_sdss_i():
 
-    filt = 'SLOAN/SDSS.iprime_filter'
+    identifier = 'SLOAN/SDSS.iprime_filter'
 
-    approx_wl, approx_tr = f.reconstruct(filt)
-    true_wl, true_tr = f.download_true_transmittance(filt)
+    filt = f.reconstruct(identifier)
+    approx_wl, approx_tr = filt.wavelength, filt.transmittance
+    true_filt = f.download_true_transmittance(identifier)
+    true_wl, true_tr = true_filt.wavelength, true_filt.transmittance
 
     np.testing.assert_allclose(np.interp(true_wl, approx_wl, approx_tr),
                                true_tr, atol=0.05)

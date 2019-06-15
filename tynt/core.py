@@ -1,21 +1,22 @@
 import os
 
 import numpy as np
+import astropy.units as u
 from astropy.io import fits
 from astropy.table import Table
 from astropy.utils.data import download_file
 from astropy.modeling import models
-import astropy.units as u
+from astropy.modeling.tabular import Tabular1D
 
 
-__all__ = ['Filter']
+__all__ = ['FilterGenerator']
 
 data_path = os.path.join(os.path.dirname(__file__), 'data', 'fft.fits')
 
 
-class Filter(object):
+class FilterGenerator(object):
     """
-    Astronomical filter object.
+    Astronomical filter object generator.
     """
 
     def __init__(self, path=data_path):
@@ -66,7 +67,7 @@ class Filter(object):
         transmittance = ((ifft.real - ifft.real.min()) * tr_max /
                          ifft.real.ptp())
 
-        return wavelength*u.Angstrom, transmittance
+        return Filter(wavelength*u.Angstrom, transmittance)
 
     def model(self, identifier):
         """
@@ -105,11 +106,25 @@ class Filter(object):
 
         @models.custom_model
         def fft_model(x):
+            """
+            Approximate Fourier reconstruction of an astronomical filter
+
+            Parameters
+            ----------
+            x : `~np.ndarray`
+                Wavelength in Angstroms.
+
+            Returns
+            -------
+            transmittance : `~np.ndarray`
+                Transmittance curve
+            """
             mo = m((x - wavelength.min()) /
                    (wavelength[1] - wavelength[0]))
             return (mo - mo.min()) * tr_max / mo.ptp()
 
-        return wavelength*u.Angstrom, fft_model()
+        model = fft_model()
+        return Filter(wavelength*u.Angstrom, model(wavelength), model=model)
 
     def download_true_transmittance(self, identifier):
         """
@@ -133,5 +148,32 @@ class Filter(object):
                              'theory/fps3/fps.php?ID={0}'.format(identifier))
 
         true_transmittance = Table.read(path, format='votable')
-        return (true_transmittance['Wavelength'].data.data*u.Angstrom,
-                true_transmittance['Transmission'].data.data)
+        return Filter(true_transmittance['Wavelength'].data.data*u.Angstrom,
+                      true_transmittance['Transmission'].data.data)
+
+
+class Filter(object):
+    """
+    Astronomical filter object.
+    """
+    def __init__(self, wavelength, transmittance, model=None):
+        """
+
+        Parameters
+        ----------
+        wavelength : `~numpy.ndarray`
+            Wavelength array
+        transmittance : `~numpy.ndarray`
+            Transmittance array
+        model : `~astropy.modeling.models.Model`
+            Astropy model for the transmittance curve
+        """
+        self.wavelength = wavelength
+        self.transmittance = transmittance
+        self.model = model
+
+    @property
+    def table(self):
+        return Tabular1D(points=self.wavelength,
+                         lookup_table=self.transmittance)
+
