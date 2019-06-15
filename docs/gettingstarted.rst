@@ -157,3 +157,38 @@ transmittance curve, which we'll download from the SVO service::
 
 You can see that the error on the approximate transmittance curve is generally
 less than 5% for this filter.
+
+Constructing an astropy model transmittance curve
+-------------------------------------------------
+
+In some instances it may be useful to represent the transmittance curve
+analytically with an astropy model. You can get a custom astropy model
+like so::
+
+    from tynt import Filter
+    import matplotlib.pyplot as plt
+
+    f = Filter()
+
+    identifier = 'SLOAN/SDSS.rprime_filter'
+    wavelength, model = f.model(identifier)
+
+    plt.plot(wavelength, model(wavelength))
+    plt.xlabel('Wavelength [$\AA$]')
+    plt.ylabel('Transmittance')
+    plt.show()
+
+.. plot::
+
+    from tynt import Filter
+    import matplotlib.pyplot as plt
+
+    f = Filter()
+
+    identifier = 'SLOAN/SDSS.rprime_filter'
+    wavelength, model = f.model(identifier)
+
+    plt.plot(wavelength, model(wavelength))
+    plt.xlabel('Wavelength [$\AA$]')
+    plt.ylabel('Transmittance')
+    plt.show()
