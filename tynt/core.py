@@ -176,4 +176,3 @@ class Filter(object):
     def table(self):
         return Tabular1D(points=self.wavelength,
                          lookup_table=self.transmittance)
-
