@@ -66,7 +66,7 @@ class Filter(object):
                          ifft.real.ptp())
 
         return wavelength, transmittance
-    
+
     def model(self, identifier):
         """
         Reconstruct an approximate filter transmittance curve using
