@@ -67,7 +67,7 @@ advantage of the `~tynt.FilterGenerator.available_filters()` method, like so:
 
     fig, ax = plt.subplots(figsize=(10, 5))
 
-        for filt in filters:
+    for filt in filters:
         sdss_filter = f.reconstruct(filt)
         plt.plot(sdss_filter.wavelength.value, sdss_filter.transmittance)
 
