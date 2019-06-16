@@ -1,3 +1,3 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-from .download import *
+from .download import * # noqa
