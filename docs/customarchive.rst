@@ -54,3 +54,6 @@ If you want to include all of the available filters, use the following pattern::
 
     >>> # Write out the BinTable object to a FITS file
     >>> bintable.writeto('fft.fits') # doctest: +SKIP
+
+Now when you initialize the `~tynt.FilterGenerator` object, you can supply
+it with the path to your newly created `fft.fits` file.

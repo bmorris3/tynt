@@ -8,7 +8,7 @@ from astropy.utils.data import download_file
 from astropy.modeling import models
 from astropy.modeling.tabular import Tabular1D
 
-__all__ = ['FilterGenerator']
+__all__ = ['FilterGenerator', 'Filter']
 
 data_path = os.path.join(os.path.dirname(__file__), 'data', 'fft.fits')
 
@@ -129,17 +129,15 @@ class Filter(object):
     """
     Astronomical filter object.
     """
-
     def __init__(self, wavelength, transmittance, model=None):
         """
-
         Parameters
         ----------
         wavelength : `~numpy.ndarray`
             Wavelength array
         transmittance : `~numpy.ndarray`
             Transmittance array
-        model : `~astropy.modeling.models.Model`
+        model : `~astropy.modeling.Model`
             Astropy model for the transmittance curve
         """
         self.wavelength = wavelength

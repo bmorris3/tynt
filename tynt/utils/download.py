@@ -46,6 +46,8 @@ class DownloadManager(object):
         Download all options for instruments, facilities and photometric systems
         from the SVO service.
 
+        This function requires Beautiful Soup as a dependency.
+
         Returns
         -------
         instruments : list
@@ -130,7 +132,7 @@ class DownloadManager(object):
 
         Returns
         -------
-        bt : `astropy.io.fits.BinTable`
+        bt : `~astropy.io.fits.BinTableHDU`
             BinTable object storing complex Fourier coefficients and wavelength
             metadata.
         """

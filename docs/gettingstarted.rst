@@ -25,7 +25,7 @@ Let's get the approximate transmittance curve as a function of wavelength::
 
     filt = f.reconstruct(identifier)
 
-And plot it with `matplotlib`::
+And plot it with `~matplotlib`::
 
     plt.plot(filt.wavelength.value, filt.transmittance, label=identifier)
     plt.xlabel('Wavelength [$\AA$]')
@@ -41,6 +41,7 @@ And plot it with `matplotlib`::
 
     identifier = 'SLOAN/SDSS.rprime_filter'
     filt = f.reconstruct(identifier)
+
     plt.plot(filt.wavelength.value, filt.transmittance, label=identifier)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
@@ -65,7 +66,8 @@ advantage of the `~tynt.FilterGenerator.available_filters()` method, like so:
                if 'SLOAN/SDSS' in filt and 'prime' in filt]
 
     fig, ax = plt.subplots(figsize=(10, 5))
-    for filt in filters:
+
+        for filt in filters:
         sdss_filter = f.reconstruct(filt)
         plt.plot(sdss_filter.wavelength.value, sdss_filter.transmittance)
 
@@ -75,6 +77,7 @@ advantage of the `~tynt.FilterGenerator.available_filters()` method, like so:
         plt.annotate(filt, xy=(flux_weighted_wl,
                                0.8 * sdss_filter.transmittance.max()),
                      rotation=90, va='top')
+
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
 
@@ -144,6 +147,33 @@ like so:
     filt = f.reconstruct(identifier, model=True)
 
     plt.plot(filt.wavelength.value, filt.model(filt.wavelength.value))
+    plt.xlabel('Wavelength [$\AA$]')
+    plt.ylabel('Transmittance')
+    plt.show()
+
+Getting transmittance curves not included by default
+----------------------------------------------------
+
+You have access to all of the filters stored in the
+`SVO Filter Profile Service <http://svo2.cab.inta-csic.es/theory/fps/>`_ if you
+have internet access via the `~tynt.FilterGenerator.download_true_transmittance`
+method:
+
+.. plot::
+    :include-source:
+
+    from tynt import FilterGenerator
+    import matplotlib.pyplot as plt
+
+    f = FilterGenerator()
+
+    identifier_b = 'TYCHO/TYCHO.B'
+    identifier_v = 'TYCHO/TYCHO.V'
+    filt_b = f.download_true_transmittance(identifier_b)
+    filt_v = f.download_true_transmittance(identifier_v)
+
+    plt.plot(filt_b.wavelength.value, filt_b.transmittance)
+    plt.plot(filt_v.wavelength.value, filt_v.transmittance)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
     plt.show()
