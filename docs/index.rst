@@ -9,4 +9,5 @@ more than one hundred astronomical filters.
 
   installation
   gettingstarted
+  customarchive
   api
