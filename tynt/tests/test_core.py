@@ -61,7 +61,7 @@ def test_sdss_lambda_eff_w_eff():
                                   u.Angstrom)
 
     w_eff_true = u.Quantity([558.4, 1158.4, 1111.2, 1044.6, 1124.6],
-                             u.Angstrom)
+                            u.Angstrom)
     w_eff_approx = []
     lambda_mean_approx = []
 

@@ -43,8 +43,8 @@ class DownloadManager(object):
 
     def download_all_options(self):
         """
-        Download all options for instruments, facilities and photometric systems
-        from the SVO service.
+        Download all options for instruments, facilities and photometric
+        systems from the SVO service.
 
         This function requires Beautiful Soup as a dependency.
 
@@ -111,13 +111,12 @@ class DownloadManager(object):
         if self.links is None:
             raise ValueError("You must run `download_all_links` before "
                              "calling `download_all_tables`.")
-
+        exclude_list = ['Scorpio/Comet.CO+']
         tables = dict()
         for facility_links in self.links:
             for link in facility_links:
                 name = link.decode().split('=')[1]
-                if (name not in tables.keys() and
-                    name not in ['Scorpio/Comet.CO+']):
+                if name not in tables.keys() and name not in exclude_list:
                     path = download_file(link.decode().replace('+', '&#43;'),
                                          cache=cache)
                     tables[name] = Table.read(path)
