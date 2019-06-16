@@ -141,7 +141,7 @@ like so:
     f = FilterGenerator()
 
     identifier = 'SLOAN/SDSS.rprime_filter'
-    filt = f.model(identifier)
+    filt = f.reconstruct(identifier, model=True)
 
     plt.plot(filt.wavelength.value, filt.model(filt.wavelength.value))
     plt.xlabel('Wavelength [$\AA$]')

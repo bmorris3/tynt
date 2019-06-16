@@ -35,7 +35,7 @@ class FilterGenerator(object):
         """
         return self.table['col0'].data
 
-    def reconstruct(self, identifier):
+    def reconstruct(self, identifier, model=False):
         """
         Reconstruct an approximate filter transmittance curve for
         a given filter.
@@ -45,85 +45,61 @@ class FilterGenerator(object):
         identifier : str
             Name of the filter. To see available filters, run
             `~tynt.Filter.available_filters()`
+        model : bool
+            Construct a composite astropy model which approximates the
+            transmittance curve.
 
         Returns
         -------
-        wavelength : `~numpy.ndarray`
-            Wavelength array in Angstroms
-        transmittance : `~numpy.ndarray`
-            Approximate transmittance as a function of wavelength
+        filt : `~tynt.Filter`
+            Astronomical filter object.
         """
         filt = list(self.table.loc[identifier])[1:]
         n_lambda, lambda_0, delta_lambda, tr_max = filt[:4]
         fft = filt[4:]
-
-        wavelength = np.arange(lambda_0, (n_lambda + 1) *
-                               delta_lambda + lambda_0,
-                               delta_lambda)
-
-        ifft = np.fft.ifft(fft, n=len(wavelength))
-
-        transmittance = ((ifft.real - ifft.real.min()) * tr_max /
-                         ifft.real.ptp())
-
-        return Filter(wavelength * u.Angstrom, transmittance)
-
-    def model(self, identifier):
-        """
-        Reconstruct an approximate filter transmittance curve using
-        astropy models for a given filter.
-
-        Parameters
-        ----------
-        identifier : str
-            Name of the filter. To see available filters, run
-            `~tynt.Filter.available_filters()`
-
-        Returns
-        -------
-        wavelength : `~numpy.ndarray`
-            Wavelength array in Angstroms
-        model : `~astropy.modeling.Model`
-            Approximate astropy model representing the
-            filter transmission curve
-        """
-        filt = list(self.table.loc[identifier])[1:]
-        n_lambda, lambda_0, delta_lambda, tr_max = filt[:4]
-        fft = filt[4:]
+        astropy_model = None
 
         wavelength = np.arange(lambda_0, (n_lambda + 1) *
                                delta_lambda + lambda_0,
                                delta_lambda)
         N = len(wavelength)
 
-        m = (np.sum([models.Sine1D(amplitude=fft[i].real / N,
-                                   frequency=i / N, phase=1 / 4)
-                     for i in range(len(fft))]) -
-             np.sum([models.Sine1D(amplitude=fft[i].imag / N,
-                                   frequency=i / N)
-                     for i in range(len(fft))]))
+        ifft = np.fft.ifft(fft, n=len(wavelength))
 
-        @models.custom_model
-        def fft_model(x):
-            """
-            Approximate Fourier reconstruction of an astronomical filter
+        transmittance = ((ifft.real - ifft.real.min()) * tr_max /
+                         ifft.real.ptp())
 
-            Parameters
-            ----------
-            x : `~np.ndarray`
-                Wavelength in Angstroms.
+        if model:
+            m = (np.sum([models.Sine1D(amplitude=fft[i].real / N,
+                                       frequency=i / N, phase=1 / 4)
+                         for i in range(len(fft))]) -
+                 np.sum([models.Sine1D(amplitude=fft[i].imag / N,
+                                       frequency=i / N)
+                         for i in range(len(fft))]))
 
-            Returns
-            -------
-            transmittance : `~np.ndarray`
-                Transmittance curve
-            """
-            mo = m((x - wavelength.min()) /
-                   (wavelength[1] - wavelength[0]))
-            return (mo - mo.min()) * tr_max / mo.ptp()
+            @models.custom_model
+            def fft_model(x):
+                """
+                Approximate Fourier reconstruction of an astronomical filter
 
-        model = fft_model()
-        return Filter(wavelength * u.Angstrom, model(wavelength), model=model)
+                Parameters
+                ----------
+                x : `~np.ndarray`
+                    Wavelength in Angstroms.
+
+                Returns
+                -------
+                transmittance : `~np.ndarray`
+                    Transmittance curve
+                """
+                mo = m((x - wavelength.min()) /
+                       (wavelength[1] - wavelength[0]))
+                return (mo - mo.min()) * tr_max / mo.ptp()
+
+            astropy_model = fft_model()
+
+        return Filter(wavelength * u.Angstrom, transmittance,
+                      model=astropy_model)
 
     def download_true_transmittance(self, identifier):
         """
@@ -138,10 +114,8 @@ class FilterGenerator(object):
 
         Returns
         -------
-        wavelength : `~numpy.ndarray`
-            True wavelength array in Angstroms
-        transmittance : `~numpy.ndarray`
-            True transmittance as a function of wavelength
+        filt : `~tynt.Filter`
+            Astronomical filter object.
         """
         path = download_file('http://svo2.cab.inta-csic.es/'
                              'theory/fps3/fps.php?ID={0}'.format(identifier))
