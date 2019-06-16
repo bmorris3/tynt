@@ -15,20 +15,15 @@ class DownloadManager(object):
     >>> from tynt import DownloadManager
     >>> # Initialize the filter generator:
     >>> dm = DownloadManager()
-
     >>> # Included filter sets in download:
     >>> print(dm.include_facilities, dm.include_photsys) # doctest: +SKIP
-
     >>> # Download all of the links to the filter transmission curves
     >>> dm.download_all_links() # doctest: +SKIP
-
     >>> # Download all of the filter transmission curve tables
     >>> dm.download_all_tables() # doctest: +SKIP
-
     >>> # Take the Fourier transform of each transmission curve,
     >>> # output to a FITS BinTable object
     >>> bintable = dm.fft_table() # doctest: +SKIP
-
     >>> # Write out the BinTable object to a FITS file
     >>> bintable.writeto('fft.fits') # doctest: +SKIP
     """
