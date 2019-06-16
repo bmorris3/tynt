@@ -81,3 +81,66 @@ def test_sdss_lambda_eff_w_eff():
     assert_quantity_allclose(w_eff_approx, w_eff_true,
                              rtol=0.05)
     assert_quantity_allclose(lambda_mean_approx, lambda_mean_true, rtol=0.01)
+
+
+def test_2MASS_lambda_eff_w_eff():
+
+    sdss_filters = ['2MASS/2MASS.J', '2MASS/2MASS.H', '2MASS/2MASS.Ks']
+
+    # Answers from:
+    # http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=browse&gname=2MASS
+    lambda_mean_true = u.Quantity([12350.0, 16620.0, 21590.0], u.Angstrom)
+
+    w_eff_true = u.Quantity([1624.1, 2509.4, 2618.9], u.Angstrom)
+    w_eff_approx = []
+    lambda_mean_approx = []
+
+    for identifier in sdss_filters:
+        filt = f.reconstruct(identifier)
+
+        lambda_bar_approx = (np.trapz(filt.transmittance * filt.wavelength,
+                                      filt.wavelength) /
+                             np.trapz(filt.transmittance, filt.wavelength))
+
+        width_approx = (np.trapz(filt.transmittance, filt.wavelength) /
+                        filt.transmittance.max())
+
+        w_eff_approx.append(width_approx)
+        lambda_mean_approx.append(lambda_bar_approx)
+
+    assert_quantity_allclose(w_eff_approx, w_eff_true,
+                             rtol=0.08)
+    assert_quantity_allclose(lambda_mean_approx, lambda_mean_true, rtol=0.01)
+
+
+def test_johnson_lambda_eff_w_eff():
+
+    sdss_filters = ['Generic/Johnson.U', 'Generic/Johnson.B',
+                    'Generic/Johnson.V', 'Generic/Johnson.R',
+                    'Generic/Johnson.I']
+
+    # Answers from:
+    # http://svo2.cab.inta-csic.es/theory/fps/index.php?mode=browse&gname=Generic&gname2=Johnson
+    lambda_mean_true = u.Quantity([3531.1, 4430.4, 5537.2, 6939.6, 8780.7],
+                                  u.Angstrom)
+
+    w_eff_true = u.Quantity([657.0, 972.7, 889.7, 2070.0, 2316.0], u.Angstrom)
+    w_eff_approx = []
+    lambda_mean_approx = []
+
+    for identifier in sdss_filters:
+        filt = f.reconstruct(identifier)
+
+        lambda_bar_approx = (np.trapz(filt.transmittance * filt.wavelength,
+                                      filt.wavelength) /
+                             np.trapz(filt.transmittance, filt.wavelength))
+
+        width_approx = (np.trapz(filt.transmittance, filt.wavelength) /
+                        filt.transmittance.max())
+
+        w_eff_approx.append(width_approx)
+        lambda_mean_approx.append(lambda_bar_approx)
+
+    assert_quantity_allclose(w_eff_approx, w_eff_true,
+                             rtol=0.1)
+    assert_quantity_allclose(lambda_mean_approx, lambda_mean_true, rtol=0.03)
