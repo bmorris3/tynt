@@ -77,6 +77,9 @@ class FilterGenerator(object):
                                        frequency=i / N)
                          for i in range(len(fft))]))
 
+            mo_full_bandpass = m((wavelength - wavelength.min()) /
+                                 (wavelength[1] - wavelength[0]))
+
             @models.custom_model
             def fft_model(x):
                 """
@@ -94,7 +97,8 @@ class FilterGenerator(object):
                 """
                 mo = m((x - wavelength.min()) /
                        (wavelength[1] - wavelength[0]))
-                return (mo - mo.min()) * tr_max / mo.ptp()
+                return ((mo - mo_full_bandpass.min()) * tr_max /
+                        mo_full_bandpass.ptp())
 
             astropy_model = fft_model()
 
