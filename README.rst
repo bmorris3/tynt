@@ -12,7 +12,7 @@ tynt
    :target: http://www.astropy.org
    :alt: Powered by Astropy Badge
 
-.. image:: assets/logo.svg
+.. image:: https://github.com/bmorris3/tynt/blob/main/docs/assets/logo.svg
     :alt: tynt logo
     :width: 200
     :align: right
