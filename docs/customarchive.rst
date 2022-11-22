@@ -58,4 +58,4 @@ If you want to include all of the available filters, use the following pattern:
     bintable.writeto('fft.fits')
 
 Now when you initialize the :py:class:`~tynt.FilterGenerator` object, you can supply
-it with the path to your newly created `fft.fits` file.
+it with the path to your newly created ``fft.fits`` file.

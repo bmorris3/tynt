@@ -10,7 +10,7 @@ from astropy.modeling.tabular import Tabular1D
 
 __all__ = ['FilterGenerator', 'Filter']
 
-data_path = os.path.join(os.path.dirname(__file__), 'data', 'fft.fits')
+data_path = os.path.join(os.path.dirname(__file__), 'data', 'fft.fits.zip')
 
 
 class FilterGenerator(object):
@@ -29,13 +29,13 @@ class FilterGenerator(object):
 
         self.path = path
         self.table = Table(fits.getdata(path))
-        self.table.add_index('col0')
+        self.table.add_index('Filter name')
 
     def available_filters(self):
         """
         Return the available filters in the archive
         """
-        return self.table['col0'].data
+        return self.table['Filter name'].data
 
     def reconstruct(self, identifier, model=False):
         """
@@ -86,12 +86,12 @@ class FilterGenerator(object):
 
                 Parameters
                 ----------
-                x : `~np.ndarray`
+                x : ~np.ndarray
                     Wavelength in Angstroms.
 
                 Returns
                 -------
-                transmittance : `~np.ndarray`
+                transmittance : np.ndarray`
                     Transmittance curve
                 """
                 mo = m((x - wavelength.min()) /

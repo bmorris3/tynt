@@ -6,7 +6,7 @@ Approximating a filter transmittance curve
 ------------------------------------------
 
 First, let's simply plot the approximate transmittance curve SDSS r' filter.
-We begin by importing `tynt` and `matplotlib`:
+We begin by importing ``tynt`` and ``matplotlib``:
 
 .. code-block:: python
 

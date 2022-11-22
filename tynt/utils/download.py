@@ -6,6 +6,8 @@ from astropy.utils.data import download_file
 
 __all__ = ['DownloadManager']
 
+n_terms = 10
+
 
 class DownloadManager(object):
     """
@@ -13,10 +15,11 @@ class DownloadManager(object):
     """
     # default facilities included in download:
     include_facilities = ['2MASS', 'SLOAN', 'Kepler', 'TESS', 'HST', 'JWST',
-                          'LSST', 'Keck', 'WISE', 'WFIRST', 'Spitzer', 'GAIA']
+                          'LSST', 'Keck', 'WISE', 'WFIRST', 'Spitzer', 'GAIA',
+                          'CHEOPS']
 
     # default photometric systems included in download:
-    include_photsys = ['Bessel', 'Johnson', 'Cousins']
+    include_photsys = ['Bessel', 'Johnson', 'Cousins', 'Stromgren']
 
     def __init__(self):
         self.links = None
@@ -59,7 +62,7 @@ class DownloadManager(object):
 
         Parameters
         ----------
-        cache : bool (optional)
+        cache : bool, optional
             Cache the links to your local astropy cache.
         """
         filters = []
@@ -90,7 +93,7 @@ class DownloadManager(object):
 
         Parameters
         ----------
-        cache : bool (optional)
+        cache : bool, optional
             Cache the links to your local astropy cache.
         """
         if self.links is None:
@@ -118,9 +121,14 @@ class DownloadManager(object):
         complex Fourier coefficients representing the filter transmittance
         curves (step 3).
 
+        Parameter
+        ---------
+        n_terms : int
+            Number of FFT terms to save
+
         Returns
         -------
-        bt : `~astropy.io.fits.BinTableHDU`
+        bt : astropy.io.fits.BinTableHDU
             BinTable object storing complex Fourier coefficients and wavelength
             metadata.
         """
@@ -128,9 +136,7 @@ class DownloadManager(object):
             raise ValueError("You must run `download_all_tables` before "
                              "calling `fft_table`.")
 
-        rows = dict()
-        n_terms = 10
-
+        d = dict()
         for k, v in self.tables.items():
             wl, tr = v['Wavelength'], v['Transmission']
 
@@ -154,11 +160,25 @@ class DownloadManager(object):
 
             # Save results in a dictionary
             row = [n_lambda, lambda_0, delta_lambda, tr_max] + fft.tolist()
-            rows[k] = row
+            d[k] = row
 
-        filtered_table = Table(rows=[[r] + rows[r] for i, r in enumerate(rows)
-                                     if len(rows[r]) == n_terms + 4])
+        rows = [[id] + d[id] for i, id in enumerate(d.keys())
+                if len(d[id]) == n_terms + 4]
+        names = (
+            "Filter name, n_lambda, lambda_0, delta_lambda, tr_max".split(", ") +
+            [f"fft_{i}" for i in range(n_terms)]
+        )
+        comments = (
+            ("SVO FPS filter name, Number of points in transmittance curve, " +
+             "Central wavelength (Angstrom), Wavelength spacing (Angstrom), "+
+             "Maximum transmittance").split(", ") +
+            [f"FFT term: {i}" for i in range(n_terms)]
+        )
+
+        filtered_table = Table(rows=rows, names=names)
 
         bt = fits.BinTableHDU(data=filtered_table)
+        for i in range(len(names)):
+            bt.header.comments[f"TTYPE{i+1:d}"] = comments[i]
 
         return bt

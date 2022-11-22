@@ -1,6 +1,6 @@
-`tynt` is a super lightweight package containing approximate transmittance
-curves for more than five hundred astronomical filters, weighing in at just
-under 150 KB. Depends only on numpy and astropy.
+``tynt`` is a super lightweight package containing approximate transmittance
+curves for more than one thousand astronomical filters, weighing in at just
+186 KB. Depends only on numpy and astropy.
 
 .. toctree::
   :maxdepth: 2
