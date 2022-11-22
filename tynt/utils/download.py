@@ -170,7 +170,7 @@ class DownloadManager(object):
         )
         comments = (
             ("SVO FPS filter name, Number of points in transmittance curve, " +
-             "Central wavelength (Angstrom), Wavelength spacing (Angstrom), "+
+             "Central wavelength (Angstrom), Wavelength spacing (Angstrom), " +
              "Maximum transmittance").split(", ") +
             [f"FFT term: {i}" for i in range(n_terms)]
         )

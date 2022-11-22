@@ -2,6 +2,9 @@
 Build a custom archive
 **********************
 
+Build your own copy of the default tynt filter coefficients
+-----------------------------------------------------------
+
 You can build a custom local filter archive by using the :py:class:`~tynt.DownloadManager`
 object, like so:
 
@@ -26,6 +29,15 @@ object, like so:
 
     # Write out the BinTable object to a FITS file
     bintable.writeto('fft.fits')
+
+Build your own copy of ALL of the SVO FPS filter coefficients
+-------------------------------------------------------------
+
+.. note::
+
+    You should be prepared to wait about an hour for the following example to run.
+    As of late 2022, there are more than 10,300 filters accessible with this workflow.
+    The resulting FITS archive will be ~2.4 MB, and it can zip down to ~1.7 MB.
 
 If you want to include all of the available filters, use the following pattern:
 
