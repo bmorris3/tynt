@@ -26,13 +26,19 @@ jobs:
             python: 3.x
             toxenv: codestyle
 
-          - name: Python 3.9 with minimal dependencies
+          - name: Python 3.9 with minimal dependencies, no remote data
+            os: ubuntu-latest
+            python: 3.9
+            toxenv: py39-test
+            toxposargs: --remote-data=none
+
+          - name: Python 3.9 with minimal dependencies, with remote data
             os: ubuntu-latest
             python: 3.9
             toxenv: py39-test
             toxposargs: --remote-data=any
 
-          - name: Python 3.9 with latest dev versions of key dependencies
+          - name: Python 3.9 with latest dev dependencies, with remote data
             os: ubuntu-latest
             python: 3.9
             toxenv: py39-test-devdeps

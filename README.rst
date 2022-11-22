@@ -12,6 +12,11 @@ tynt
    :target: http://www.astropy.org
    :alt: Powered by Astropy Badge
 
+.. image:: assets/logo.svg
+    :alt: tynt logo
+    :width: 200
+    :align: right
+
 Astronomical color filters (almost). See `docs for details <https://tynt.readthedocs.io>`_.
 
 License
