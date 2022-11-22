@@ -1,6 +1,10 @@
 tynt
 ----
 
+.. image:: https://readthedocs.org/projects/tynt/badge/?version=latest
+   :target: https://tynt.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
 .. image:: https://github.com/bmorris3/tynt/workflows/CI%20Tests/badge.svg
    :target: https://github.com/bmorris3/tynt/actions
 
@@ -8,7 +12,7 @@ tynt
    :target: http://www.astropy.org
    :alt: Powered by Astropy Badge
 
-Astronomical color filters (almost).
+Astronomical color filters (almost). See `docs for details <https://tynt.readthedocs.io>`_.
 
 License
 -------
