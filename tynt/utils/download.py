@@ -1,7 +1,8 @@
+import numpy as np
+
 from astropy.io import fits
 from astropy.table import Table
 from astropy.utils.data import download_file
-import numpy as np
 
 __all__ = ['DownloadManager']
 
@@ -16,16 +17,16 @@ class DownloadManager(object):
     >>> # Initialize the filter generator:
     >>> dm = DownloadManager()
     >>> # Included filter sets in download:
-    >>> print(dm.include_facilities, dm.include_photsys) # doctest: +SKIP
+    >>> print(dm.include_facilities, dm.include_photsys)
     >>> # Download all of the links to the filter transmission curves
-    >>> dm.download_all_links() # doctest: +SKIP
+    >>> dm.download_all_links()
     >>> # Download all of the filter transmission curve tables
-    >>> dm.download_all_tables() # doctest: +SKIP
+    >>> dm.download_all_tables()
     >>> # Take the Fourier transform of each transmission curve,
     >>> # output to a FITS BinTable object
-    >>> bintable = dm.fft_table() # doctest: +SKIP
+    >>> bintable = dm.fft_table()
     >>> # Write out the BinTable object to a FITS file
-    >>> bintable.writeto('fft.fits') # doctest: +SKIP
+    >>> bintable.writeto('fft.fits')
     """
     include_facilities = ['2MASS', 'SLOAN', 'Kepler', 'TESS', 'HST', 'JWST',
                           'LSST', 'Keck', 'WISE', 'WFIRST', 'Spitzer', 'GAIA']
@@ -54,12 +55,16 @@ class DownloadManager(object):
         """
         from bs4 import BeautifulSoup
         bs = BeautifulSoup(open(download_file('http://svo2.cab.inta-csic.es/'
-                                              'theory/fps3/fps.php')).read())
-        all_options = [b.attrs['value'] for b in bs.find_all('option')]
-        instruments = all_options[1:all_options.index('', 1)]
-        facilities = all_options[all_options.index('', 1) + 1:
-                                 all_options.index('', 150)]
-        photometric_system = all_options[all_options.index('', 150) + 1:]
+                                              'theory/fps3/fps.php')).read(), 'xml')
+        names = ["INPUT:Instrument", "INPUT:Facility", "INPUT:PhotSystem"]
+        instruments, facilities, photometric_system = [
+            [
+                opt.get("value") for opt in
+                bs.findChildren(
+                    "PARAM", attrs=dict(name=name)
+                )[0].find_all("OPTION")
+            ] for name in names
+        ]
         return instruments, facilities, photometric_system
 
     def download_all_links(self, cache=True):
@@ -110,9 +115,13 @@ class DownloadManager(object):
         tables = dict()
         for facility_links in self.links:
             for link in facility_links:
-                name = link.decode().split('=')[1]
+                if hasattr(link, 'decode'):
+                    link = link.decode()
+                name = link.split('=')[1]
                 if name not in tables.keys() and name not in exclude_list:
-                    path = download_file(link.decode().replace('+', '&#43;'),
+                    if hasattr(link, 'decode'):
+                        link = link.decode()
+                    path = download_file(link.replace('+', '&#43;'),
                                          cache=cache)
                     tables[name] = Table.read(path)
 

@@ -1,0 +1,5 @@
+name: tynt
+dependencies:
+  - pip:
+    - numpy
+    - astropy
