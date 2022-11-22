@@ -17,13 +17,12 @@ class FilterGenerator(object):
     """
     Astronomical filter object generator.
     """
-
     def __init__(self, path=None):
         """
         Parameters
         ----------
         path : str (optional)
-            Path to `fft.fits` file. If None, uses the package default data path.
+            Path to ``fft.fits`` file. If None, uses the package default data path.
         """
         if path is None:
             path = data_path
@@ -47,14 +46,14 @@ class FilterGenerator(object):
         ----------
         identifier : str
             Name of the filter. To see available filters, run
-            `~tynt.Filter.available_filters()`
+            :py:meth:`~tynt.Filter.available_filters`.
         model : bool
             Construct a composite astropy model which approximates the
             transmittance curve.
 
         Returns
         -------
-        filt : `~tynt.Filter`
+        filt : ~tynt.Filter
             Astronomical filter object.
         """
         filt = list(self.table.loc[identifier])[1:]
@@ -107,18 +106,14 @@ class FilterGenerator(object):
     def download_true_transmittance(self, identifier):
         """
         Query the SVO service for a given filter,
-        return the true transmittance curve.
+        return the true transmittance curve as a
+        :py:class:`~tynt.Filter`.
 
         Parameters
         ----------
         identifier : str
             Name of the filter. To see available filters, run
-            `~tynt.Filter.available_filters()`
-
-        Returns
-        -------
-        filt : `~tynt.Filter`
-            Astronomical filter object.
+            :py:meth:`~tynt.Filter.available_filters`
         """
         path = download_file('http://svo2.cab.inta-csic.es/'
                              f'theory/fps3/fps.php?ID={identifier}')
@@ -130,17 +125,17 @@ class FilterGenerator(object):
 
 class Filter(object):
     """
-    Astronomical filter object.
+    Astronomical filter.
     """
     def __init__(self, wavelength, transmittance, model=None):
         """
         Parameters
         ----------
-        wavelength : `~numpy.ndarray`
+        wavelength : ~numpy.ndarray
             Wavelength array
-        transmittance : `~numpy.ndarray`
+        transmittance : ~numpy.ndarray
             Transmittance array
-        model : `~astropy.modeling.Model`
+        model : ~astropy.modeling.Model
             Astropy model for the transmittance curve
         """
         self.wavelength = wavelength
@@ -149,5 +144,9 @@ class Filter(object):
 
     @property
     def table(self):
+        """
+        Filter transmittance represented as a
+        :py:class:`~astropy.Tabular1D.modeling.tabular.Tabular1D`.
+        """
         return Tabular1D(points=self.wavelength,
                          lookup_table=self.transmittance)

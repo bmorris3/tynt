@@ -73,8 +73,8 @@ autodoc_inherit_docstrings = True
 html_context = {
     "display_github": True,
     "github_user": "bmorris3",
-    "github_repo": "gadfly",
-    "github_version": "master",
+    "github_repo": "tynt",
+    "github_version": "main",
     "conf_py_path": "docs/",
 }
 
