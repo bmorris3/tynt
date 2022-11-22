@@ -103,7 +103,7 @@ class FilterGenerator(object):
         return Filter(wavelength * u.Angstrom, transmittance,
                       model=astropy_model)
 
-    def download_true_transmittance(self, identifier):
+    def download_true_transmittance(self, identifier, **kwargs):
         """
         Query the SVO service for a given filter,
         return the true transmittance curve as a
@@ -114,9 +114,11 @@ class FilterGenerator(object):
         identifier : str
             Name of the filter. To see available filters, run
             :py:meth:`~tynt.Filter.available_filters`
+        **kwargs : dict
+            Passed to ``download_file``
         """
         path = download_file('http://svo2.cab.inta-csic.es/'
-                             f'theory/fps3/fps.php?ID={identifier}')
+                             f'theory/fps3/fps.php?ID={identifier}', **kwargs)
 
         true_transmittance = Table.read(path, format='votable')
         return Filter(true_transmittance['Wavelength'].data.data * u.Angstrom,
