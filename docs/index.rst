@@ -1,6 +1,7 @@
-*************
-Documentation
-*************
+.. image:: assets/logo.svg
+    :alt: tynt logo
+    :width: 200
+    :align: right
 
 `tynt` is a super lightweight package containing approximate transmittance
 curves for more than five hundred astronomical filters, weighing in at just

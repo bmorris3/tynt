@@ -8,8 +8,8 @@ tynt
    :target: http://www.astropy.org
    :alt: Powered by Astropy Badge
 
-.. image:: https://github.com/bmorris3/gadfly/blob/master/docs/assets/logo.svg
-   :alt: gadfly logo
+.. image:: https://github.com/bmorris3/tynt/blob/master/docs/assets/logo.svg
+   :alt: tynt logo
    :width: 200
    :align: right
 
