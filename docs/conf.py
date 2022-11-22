@@ -64,6 +64,8 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'sphinx_book_theme'
+html_logo = "assets/logo.png"
+html_favicon = "assets/logo.ico"
 
 numpydoc_show_class_members = False
 autodoc_inherit_docstrings = True
