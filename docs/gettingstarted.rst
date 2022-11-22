@@ -157,7 +157,6 @@ like so:
     plt.plot(filt.wavelength.value, filt.model(filt.wavelength.value))
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
-    plt.show()
 
 Getting transmittance curves not included by default
 ----------------------------------------------------
@@ -184,4 +183,3 @@ method:
     plt.plot(filt_v.wavelength.value, filt_v.transmittance)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
-    plt.show()

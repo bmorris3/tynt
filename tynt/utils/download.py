@@ -10,27 +10,12 @@ __all__ = ['DownloadManager']
 class DownloadManager(object):
     """
     Manager for downloads from the SVO filter service.
-
-    Examples
-    --------
-    >>> from tynt import DownloadManager
-    >>> # Initialize the filter generator:
-    >>> dm = DownloadManager()
-    >>> # Included filter sets in download:
-    >>> print(dm.include_facilities, dm.include_photsys)
-    >>> # Download all of the links to the filter transmission curves
-    >>> dm.download_all_links()
-    >>> # Download all of the filter transmission curve tables
-    >>> dm.download_all_tables()
-    >>> # Take the Fourier transform of each transmission curve,
-    >>> # output to a FITS BinTable object
-    >>> bintable = dm.fft_table()
-    >>> # Write out the BinTable object to a FITS file
-    >>> bintable.writeto('fft.fits')
     """
+    # default facilities included in download:
     include_facilities = ['2MASS', 'SLOAN', 'Kepler', 'TESS', 'HST', 'JWST',
                           'LSST', 'Keck', 'WISE', 'WFIRST', 'Spitzer', 'GAIA']
 
+    # default photometric systems included in download:
     include_photsys = ['Bessel', 'Johnson', 'Cousins']
 
     def __init__(self):
