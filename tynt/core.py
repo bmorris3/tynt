@@ -31,20 +31,23 @@ class FilterGenerator(object):
         self.table = Table(fits.getdata(path))
         self.table.add_index('Filter name')
 
-    def available_filters(self, as_dict=True, as_dataframe=False):
+    def available_filters(self, as_dict=False, as_dataframe=False):
         """
         Return the available filters in the archive.
+
+        Default returns a :py:class:`~numpy.ndarray`.
 
         Parameters
         ----------
         as_dict : bool
             Return available filters in a nested dictionary.
+        as_dataframe : bool
+            Return available filters in a pandas DataFrame.
         """
         if as_dataframe:
             as_dict = False
 
         if as_dict or as_dataframe:
-
             result = dict()
             for identifier in self.table['Filter name'].data:
                 if '/' in identifier:
