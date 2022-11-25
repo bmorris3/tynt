@@ -5,10 +5,11 @@ curves for more than one thousand astronomical filters, weighing in at just
 .. toctree::
   :maxdepth: 2
 
-  installation
-  gettingstarted
-  customarchive
-  tynt/index.rst
+  tynt/installation
+  tynt/gettingstarted
+  tynt/customarchive
+  tynt/filters.rst
+  tynt/api.rst
 
 Simple example
 --------------

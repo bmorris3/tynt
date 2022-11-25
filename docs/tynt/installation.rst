@@ -14,4 +14,4 @@ cloning the git repository::
 ...then installing the package with::
 
     cd tynt
-    pip install -e .
+    pip install -e .[all]

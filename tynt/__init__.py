@@ -2,4 +2,4 @@
 
 from .version import __version__  # noqa
 from .core import *  # noqa
-from .utils import *  # noqa
+from .download import *  # noqa

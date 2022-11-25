@@ -31,10 +31,11 @@ Let's get the approximate transmittance curve as a function of wavelength:
 
     filt = f.reconstruct(identifier)
 
-And plot it with `~matplotlib`:
+And plot it with ``matplotlib``:
 
 .. code-block:: python
 
+    import matplotlib.pyplot as plt
     plt.plot(filt.wavelength.value, filt.transmittance, label=identifier)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
@@ -161,7 +162,8 @@ like so:
 Getting transmittance curves not included by default
 ----------------------------------------------------
 
-You have access to all of the filters stored in the
+A list of the filters available in ``tynt`` is documented in :doc:`filters`.
+You also have access to *all* of the filters stored in the
 `SVO Filter Profile Service <http://svo2.cab.inta-csic.es/theory/fps/>`_ if you
 have internet access via the :py:meth:`~tynt.FilterGenerator.download_true_transmittance`
 method:
@@ -183,3 +185,5 @@ method:
     plt.plot(filt_v.wavelength.value, filt_v.transmittance)
     plt.xlabel('Wavelength [$\AA$]')
     plt.ylabel('Transmittance')
+
+To make a local archive of *all* filters available via SVO, see :doc:`customarchive`.

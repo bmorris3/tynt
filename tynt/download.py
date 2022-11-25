@@ -121,14 +121,14 @@ class DownloadManager(object):
         complex Fourier coefficients representing the filter transmittance
         curves (step 3).
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         n_terms : int
             Number of FFT terms to save
 
         Returns
         -------
-        bt : astropy.io.fits.BinTableHDU
+        bt : ~astropy.io.fits.BinTableHDU
             BinTable object storing complex Fourier coefficients and wavelength
             metadata.
         """

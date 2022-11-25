@@ -5,18 +5,18 @@ import astropy.units as u
 
 from ..core import FilterGenerator
 
-f = FilterGenerator()
+filter_generator = FilterGenerator()
 
 
 @pytest.mark.remote_data
 @pytest.mark.parametrize(
     "identifier,",
-    ['SLOAN/SDSS.rprime_filter', 'SLOAN/SDSS.gprime_filter', 'SLOAN/SDSS.iprime_filter']
+    ['SLOAN/SDSS.rprime_filter', 'SLOAN/SDSS.gprime_filter', 'SLOAN/SDSS.iprime_filter'],
 )
-def test_download(identifier):
-    filt = f.reconstruct(identifier)
+def test_download(identifier, filter_generator=filter_generator):
+    filt = filter_generator.reconstruct(identifier)
     approx_wl, approx_tr = filt.wavelength, filt.transmittance
-    true_filt = f.download_true_transmittance(identifier)
+    true_filt = filter_generator.download_true_transmittance(identifier)
     true_wl, true_tr = true_filt.wavelength, true_filt.transmittance
 
     np.testing.assert_allclose(np.interp(true_wl, approx_wl, approx_tr),
@@ -58,12 +58,15 @@ rtol = [0.01, 0.01, 0.03]
     "filters, lambda_mean_true, w_eff_true, rtol",
     zip(filter_names, lambda_mean_true, w_eff_true, rtol)
 )
-def test_lambda_eff_w_eff(filters, lambda_mean_true, w_eff_true, rtol):
+def test_lambda_eff_w_eff(
+        filters, lambda_mean_true, w_eff_true, rtol,
+        filter_generator=filter_generator
+):
     w_eff_approx = []
     lambda_mean_approx = []
 
     for identifier in filters:
-        filt = f.reconstruct(identifier)
+        filt = filter_generator.reconstruct(identifier)
 
         lambda_bar_approx = (np.trapz(filt.transmittance * filt.wavelength,
                                       filt.wavelength) /

@@ -31,10 +31,59 @@ class FilterGenerator(object):
         self.table = Table(fits.getdata(path))
         self.table.add_index('Filter name')
 
-    def available_filters(self):
+    def available_filters(self, as_dict=True, as_dataframe=False):
         """
-        Return the available filters in the archive
+        Return the available filters in the archive.
+
+        Parameters
+        ----------
+        as_dict : bool
+            Return available filters in a nested dictionary.
         """
+        if as_dataframe:
+            as_dict = False
+
+        if as_dict or as_dataframe:
+
+            result = dict()
+            for identifier in self.table['Filter name'].data:
+                if '/' in identifier:
+                    pre_slash, post_slash = identifier.split('/')
+                    if pre_slash not in result:
+                        result[pre_slash] = dict()
+                    pre_period, post_period = (
+                        post_slash.split('.')
+                        if '.' in post_slash else (None, None)
+                    )
+                    if pre_period not in result[pre_slash]:
+                        result[pre_slash].update({pre_period: []})
+                    result[pre_slash][pre_period].append(post_period)
+                else:
+                    if 'OTHER' not in result:
+                        result['OTHER'] = []
+                    result['OTHER'].append(identifier)
+
+            if as_dict:
+                return result
+
+            # otherwise, prep the dataframe:
+            import pandas as pd
+            reshaped = []
+            for outerKey, innerDict in result.items():
+                for innerKey, values in innerDict.items():
+                    reshaped.append([outerKey, innerKey, ', '.join(values)])
+
+            df = pd.DataFrame(reshaped, columns='group Set Filters'.split())
+            df = df.set_index('Set')
+            gr = df.groupby('group', group_keys=True)
+            groups = dict()
+            for name, group in gr:
+                groups[name] = group.reindex(index=group.index)
+            groups = pd.concat(groups)
+            groups = groups.drop(columns=['group'])
+
+            return groups
+
         return self.table['Filter name'].data
 
     def reconstruct(self, identifier, model=False):
@@ -46,7 +95,7 @@ class FilterGenerator(object):
         ----------
         identifier : str
             Name of the filter. To see available filters, run
-            :py:meth:`~tynt.Filter.available_filters`.
+            :py:meth:`~tynt.FilterGenerator.available_filters`.
         model : bool
             Construct a composite astropy model which approximates the
             transmittance curve.
@@ -100,8 +149,9 @@ class FilterGenerator(object):
 
             astropy_model = fft_model()
 
-        return Filter(wavelength * u.Angstrom, transmittance,
-                      model=astropy_model)
+        return Filter(
+            wavelength * u.Angstrom, transmittance, model=astropy_model
+        )
 
     def download_true_transmittance(self, identifier, **kwargs):
         """
@@ -113,27 +163,30 @@ class FilterGenerator(object):
         ----------
         identifier : str
             Name of the filter. To see available filters, run
-            :py:meth:`~tynt.Filter.available_filters`
+            :py:meth:`~tynt.FilterGenerator.available_filters`
         **kwargs : dict
-            Passed to ``download_file``
+            Passed to :py:func:`astropy.utils.data.download_file`
         """
         path = download_file('http://svo2.cab.inta-csic.es/'
                              f'theory/fps3/fps.php?ID={identifier}', **kwargs)
 
         true_transmittance = Table.read(path, format='votable')
-        return Filter(true_transmittance['Wavelength'].data.data * u.Angstrom,
-                      true_transmittance['Transmission'].data.data)
+        return Filter(
+            true_transmittance['Wavelength'].data.data * u.Angstrom,
+            true_transmittance['Transmission'].data.data
+        )
 
 
 class Filter(object):
     """
     Astronomical filter.
     """
+    @u.quantity_input(wavelength=u.m)
     def __init__(self, wavelength, transmittance, model=None):
         """
         Parameters
         ----------
-        wavelength : ~numpy.ndarray
+        wavelength : ~astropy.unit.Quantity
             Wavelength array
         transmittance : ~numpy.ndarray
             Transmittance array
@@ -147,8 +200,12 @@ class Filter(object):
     @property
     def table(self):
         """
-        Filter transmittance represented as a
-        :py:class:`~astropy.Tabular1D.modeling.tabular.Tabular1D`.
+        Filter transmittance represented in the astropy modeling framework.
+
+        Returns
+        -------
+        tab : ~astropy.modeling.tabular.Tabular1D
+            Lookup table for astropy modeling.
         """
         return Tabular1D(points=self.wavelength,
                          lookup_table=self.transmittance)

@@ -16,3 +16,4 @@ exclude .editorconfig
 exclude .zenodo.json
 exclude *.yml
 exclude *.yaml
+exclude filter_list_to_rst.py
