@@ -84,3 +84,4 @@ html_context = {
 
 autosectionlabel_prefix_document = True
 autoclass_content = 'both'
+nitpicky = True

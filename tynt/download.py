@@ -62,7 +62,7 @@ class DownloadManager(object):
 
         Parameters
         ----------
-        cache : bool, optional
+        cache : bool
             Cache the links to your local astropy cache.
         """
         filters = []
@@ -93,7 +93,7 @@ class DownloadManager(object):
 
         Parameters
         ----------
-        cache : bool, optional
+        cache : bool
             Cache the links to your local astropy cache.
         """
         if self.links is None:

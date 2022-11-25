@@ -21,7 +21,7 @@ class FilterGenerator(object):
         """
         Parameters
         ----------
-        path : str (optional)
+        path : str
             Path to ``fft.fits`` file. If None, uses the package default data path.
         """
         if path is None:
@@ -186,7 +186,7 @@ class Filter(object):
         """
         Parameters
         ----------
-        wavelength : ~astropy.unit.Quantity
+        wavelength : ~astropy.units.Quantity
             Wavelength array
         transmittance : ~numpy.ndarray
             Transmittance array
