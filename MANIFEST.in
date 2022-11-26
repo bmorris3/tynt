@@ -8,8 +8,6 @@ prune .circleci
 prune .github
 prune .jupyter
 prune binder
-prune docs/assets/*.ico
-prune docs/assets/*.png
 
 # exclude a bunch of common hidden files, you probably want to add your own here
 exclude .mailmap
@@ -19,4 +17,7 @@ exclude .editorconfig
 exclude .zenodo.json
 exclude *.yml
 exclude *.yaml
+exclude filter_list_to_rst.py
+exclude docs/assets/*.ico
+exclude docs/assets/*.png
 exclude filter_list_to_rst.py
