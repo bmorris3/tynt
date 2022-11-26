@@ -8,6 +8,9 @@ prune .circleci
 prune .github
 prune .jupyter
 prune binder
+prune docs/assets/*.ico
+prune docs/assets/*.png
+
 # exclude a bunch of common hidden files, you probably want to add your own here
 exclude .mailmap
 exclude .gitignore
