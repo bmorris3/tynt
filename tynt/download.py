@@ -9,7 +9,7 @@ __all__ = ['DownloadManager']
 n_terms = 10
 
 
-class DownloadManager(object):
+class DownloadManager:
     """
     Manager for downloads from the SVO filter service.
     """
