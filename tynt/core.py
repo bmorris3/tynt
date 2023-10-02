@@ -13,7 +13,7 @@ __all__ = ['FilterGenerator', 'Filter']
 data_path = os.path.join(os.path.dirname(__file__), 'data', 'fft.fits.zip')
 
 
-class FilterGenerator(object):
+class FilterGenerator:
     """
     Astronomical filter object generator.
     """
@@ -180,7 +180,7 @@ class FilterGenerator(object):
         )
 
 
-class Filter(object):
+class Filter:
     """
     Astronomical filter.
     """
