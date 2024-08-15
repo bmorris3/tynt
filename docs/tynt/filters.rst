@@ -332,6 +332,11 @@ the 2MASS J filter in the first row below, you would call the following in ``tyn
           <td>B_aux_filter, B_qB_filter, B_qA_filter, B_qD_filter, B_filter, B_aux, B_qB, B_qA, B_qD, B, B_qC_filter, B_qC, V_qC, V_qB, V, V_qC_filter, V_qB_filter, V_qA, V_qD, V_filter, V_qA_filter, V_qD_filter, V_aux, V_aux_filter, v_strom_filter, v_strom, v_strom_aux_filter, v_strom_aux</td>
         </tr>
         <tr>
+          <th>Roman</th>
+          <th>WFI</th>
+          <td>F062, F087, F106, F129, Prism, Grism, F146, F158, F184, F213</td>
+        </tr>
+        <tr>
           <th>SLOAN</th>
           <th>SDSS</th>
           <td>uprime_filter, u, g, gprime_filter, r, rprime_filter, i, iprime_filter, z, zprime_filter</td>
