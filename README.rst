@@ -1,9 +1,9 @@
 tynt
 ----
 
-.. image:: https://readthedocs.org/projects/tynt/badge/?version=latest
-   :target: https://tynt.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
+.. image:: https://readthedocs.org/projects/tynt/badge/?version=stable
+    :target: https://tynt.readthedocs.io/en/stable/?badge=stable
+    :alt: Documentation Status
 
 .. image:: https://github.com/bmorris3/tynt/workflows/CI%20Tests/badge.svg
    :target: https://github.com/bmorris3/tynt/actions
