@@ -121,7 +121,7 @@ class FilterGenerator(object):
         ifft = np.fft.ifft(fft, n=len(wavelength))
 
         transmittance = ((ifft.real - ifft.real.min()) * tr_max /
-                         ifft.real.ptp())
+                         np.ptp(ifft.real))
 
         if model:
             m = (np.sum([models.Sine1D(amplitude=fft[i].real / N,
@@ -148,7 +148,7 @@ class FilterGenerator(object):
                 """
                 mo = m((x - wavelength.min()) /
                        (wavelength[1] - wavelength[0]))
-                return (mo - mo.min()) * tr_max / mo.ptp()
+                return (mo - mo.min()) * tr_max / np.ptp(mo)
 
             astropy_model = fft_model()
 

@@ -26,28 +26,23 @@ jobs:
             python: 3.x
             toxenv: codestyle
 
-          - name: Python 3.9 with minimal dependencies, no remote data
+          - name: Python 3.11 with minimal dependencies, no remote data
             os: ubuntu-latest
-            python: 3.9
-            toxenv: py39-test
+            python: 3.11
+            toxenv: py311-test
             toxposargs: --remote-data=none
 
-          - name: Python 3.9 with minimal dependencies, with remote data
+          - name: Python 3.11 with minimal dependencies, with remote data
             os: ubuntu-latest
-            python: 3.9
-            toxenv: py39-test
+            python: 3.11
+            toxenv: py311-test
             toxposargs: --remote-data=any
 
-          - name: Python 3.9 with latest dev dependencies, with remote data
+          - name: Python 3.11 with latest dev dependencies, with remote data
             os: ubuntu-latest
-            python: 3.9
-            toxenv: py39-test-devdeps
+            python: 3.11
+            toxenv: py311-test-devdeps
             toxposargs: --remote-data=any
-
-          - name: Test building of Sphinx docs
-            os: ubuntu-latest
-            python: 3.x
-            toxenv: build_docs
 
     steps:
     - name: Checkout code

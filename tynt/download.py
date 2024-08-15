@@ -15,7 +15,7 @@ class DownloadManager(object):
     """
     # default facilities included in download:
     include_facilities = ['2MASS', 'SLOAN', 'Kepler', 'TESS', 'HST', 'JWST',
-                          'LSST', 'Keck', 'WISE', 'WFIRST', 'Spitzer', 'GAIA',
+                          'LSST', 'Keck', 'WISE', 'WFIRST', 'Roman', 'Spitzer', 'GAIA',
                           'CHEOPS']
 
     # default photometric systems included in download:
