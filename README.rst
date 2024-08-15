@@ -6,8 +6,8 @@ tynt
     :width: 200
     :align: right
 
-.. image:: https://readthedocs.org/projects/tynt/badge/?version=stable
-    :target: https://tynt.readthedocs.io/en/stable/?badge=stable
+.. image:: https://readthedocs.org/projects/tynt/badge/?version=latest
+    :target: https://tynt.readthedocs.io/en/stable/?badge=latest
     :alt: Documentation Status
 
 .. image:: https://github.com/bmorris3/tynt/workflows/CI%20Tests/badge.svg
