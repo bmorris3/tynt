@@ -1,9 +1,11 @@
 import pytest
 import numpy as np
-from astropy.tests.helper import assert_quantity_allclose
-import astropy.units as u
 
-from ..core import FilterGenerator
+import astropy.units as u
+from astropy.tests.helper import assert_quantity_allclose
+from scipy.integrate import trapezoid
+
+from tynt.core import FilterGenerator
 
 filter_generator = FilterGenerator()
 
@@ -68,11 +70,11 @@ def test_lambda_eff_w_eff(
     for identifier in filters:
         filt = filter_generator.reconstruct(identifier)
 
-        lambda_bar_approx = (np.trapz(filt.transmittance * filt.wavelength,
-                                      filt.wavelength) /
-                             np.trapz(filt.transmittance, filt.wavelength))
+        lambda_bar_approx = (trapezoid(filt.transmittance * filt.wavelength,
+                                       filt.wavelength) /
+                             trapezoid(filt.transmittance, filt.wavelength))
 
-        width_approx = (np.trapz(filt.transmittance, filt.wavelength) /
+        width_approx = (trapezoid(filt.transmittance, filt.wavelength) /
                         filt.transmittance.max())
 
         w_eff_approx.append(width_approx)
