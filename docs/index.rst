@@ -21,6 +21,53 @@ Contents
 Simple example
 ^^^^^^^^^^^^^^
 
+Find available filters like this:
+
+.. code-block:: python
+
+    >>> from tynt.lookup import filters
+    >>> # filters.<TAB>  # this works in a Jupyter environment, OR:
+    >>> dir(filters)  # this works in any interactive environment
+    ['CAHA',
+     'CHEOPS',
+     'CTIO',
+     'GAIA',
+     ...
+
+To see the filters available within a filter set:
+
+.. code-block:: python
+
+    >>> from tynt.lookup import filters
+
+    >>> filters.Kepler
+    <FilterSet: "Kepler"
+      Available filters: ["Kepler_K"]>
+
+Plot the filter transmittance curve:
+
+.. plot::
+    :include-source:
+
+    from tynt.lookup import filters
+
+    filters.Kepler.Kepler_K.plot()
+
+Compare several optical filters:
+
+.. plot::
+    :include-source:
+
+    from tynt.lookup import filters
+
+    filters.Kepler.Kepler_K.plot(label='Kepler')
+    filters.CHEOPS.CHEOPS_band.plot(label='CHEOPS')
+    filters.TESS.TESS_Red.plot(label='TESS')
+
+
+FilterGenerator
+^^^^^^^^^^^^^^^
+
 Let's plot the transmittance curve of the SDSS r' filter:
 
 .. plot::

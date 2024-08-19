@@ -1,12 +1,15 @@
 import os
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 import astropy.units as u
 from astropy.io import fits
-from astropy.table import Table
-from astropy.utils.data import download_file
 from astropy.modeling import models
 from astropy.modeling.tabular import Tabular1D
+from astropy.table import Table
+from astropy.utils.data import download_file
+from astropy.visualization import quantity_support
 
 __all__ = ['FilterGenerator', 'Filter']
 
@@ -17,7 +20,7 @@ class FilterGenerator:
     """
     Astronomical filter object generator.
     """
-    def __init__(self, path=None):
+    def __init__(self, path=None, name=None):
         """
         Parameters
         ----------
@@ -28,6 +31,7 @@ class FilterGenerator:
             path = data_path
 
         self.path = path
+        self.name = name
         self.table = Table(fits.getdata(path))
         self.table.add_index('Filter name')
 
@@ -152,8 +156,11 @@ class FilterGenerator:
 
             astropy_model = fft_model()
 
+        filter_set, filter_name = identifier.split('/')
         return Filter(
-            wavelength * u.Angstrom, transmittance, model=astropy_model
+            wavelength * u.Angstrom, transmittance,
+            filter_set=filter_set, filter_name=identifier,
+            model=astropy_model
         )
 
     def download_true_transmittance(self, identifier, **kwargs):
@@ -174,10 +181,17 @@ class FilterGenerator:
                              f'theory/fps3/fps.php?ID={identifier}', **kwargs)
 
         true_transmittance = Table.read(path, format='votable')
+
+        filter_set, filter_name = identifier.split('/')
+
         return Filter(
             true_transmittance['Wavelength'].data.data * u.Angstrom,
-            true_transmittance['Transmission'].data.data
+            true_transmittance['Transmission'].data.data,
+            filter_set=filter_set, filter_name=identifier
         )
+
+
+_filter_generator = FilterGenerator()
 
 
 class Filter:
@@ -185,7 +199,10 @@ class Filter:
     Astronomical filter.
     """
     @u.quantity_input(wavelength=u.m)
-    def __init__(self, wavelength, transmittance, model=None):
+    def __init__(
+            self, wavelength=None, transmittance=None,
+            model=None, filter_set=None, filter_name=None
+    ):
         """
         Parameters
         ----------
@@ -196,9 +213,39 @@ class Filter:
         model : ~astropy.modeling.Model
             Astropy model for the transmittance curve
         """
-        self.wavelength = wavelength
-        self.transmittance = transmittance
+        self._wavelength = wavelength
+        self._transmittance = transmittance
         self.model = model
+        self.filter_set = filter_set
+        self.filter_name = filter_name
+
+    @property
+    def wavelength(self):
+        if self._wavelength is None:
+            self._get_filter_from_name()
+        return self._wavelength
+
+    @wavelength.setter
+    def wavelength(self, value):
+        if value is not None:
+            self._wavelength = value
+
+    @property
+    def transmittance(self):
+        if self._transmittance is None:
+            self._get_filter_from_name()
+        return self._transmittance
+
+    @transmittance.setter
+    def transmittance(self, value):
+        if value is not None:
+            self._transmittance = value
+
+    def _get_filter_from_name(self):
+        name = f"{self.filter_set}/{self.filter_name.replace('__', '.')}"
+        filt = _filter_generator.reconstruct(name)
+        self.wavelength = filt.wavelength
+        self.transmittance = filt.transmittance
 
     @property
     def table(self):
@@ -212,3 +259,25 @@ class Filter:
         """
         return Tabular1D(points=self.wavelength,
                          lookup_table=self.transmittance)
+
+    def __repr__(self):
+        if None not in (self.filter_name, self.filter_set):
+            return f"<Filter: {self.filter_set}/{self.filter_name}>"
+        return "<Filter>"
+
+    def plot(self, ax=None, x_unit=u.um, y_label='Transmittance', **kwargs):
+
+        if ax is None:
+            ax = plt.gca()
+
+        label = kwargs.pop('label', self.filter_name)
+
+        with quantity_support():
+            ax.plot(
+                self.wavelength.to(x_unit), self.transmittance,
+                label=label, **kwargs
+            )
+            ax.legend()
+
+        if y_label is not None:
+            ax.set(ylabel=y_label)
